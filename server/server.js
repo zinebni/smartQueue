@@ -1,4 +1,9 @@
-require('dotenv').config();
+const path = require('path');
+
+// CORRECTION: Charger les variables d'environnement depuis le bon fichier
+require('dotenv').config({
+  path: path.resolve(__dirname, '.env.example'),
+});
 
 const http = require('http');
 const app = require('./app');

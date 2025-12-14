@@ -92,6 +92,7 @@ import { StatsService } from '../../services/stats.service';
                   <tr>
                     <th>Agent</th>
                     <th>Guichet</th>
+                    <th>Services</th>
                     <th>Statut</th>
                     <th>Ticket actuel</th>
                     <th>Servis</th>
@@ -103,6 +104,15 @@ import { StatsService } from '../../services/stats.service';
                     <tr>
                       <td>{{ agent.firstName }} {{ agent.lastName }}</td>
                       <td>{{ agent.counterNumber || '-' }}</td>
+                      <td>
+                        <div class="services-tags">
+                          @for (service of agent.services; track service) {
+                            <span class="service-tag" [attr.data-service]="service">
+                              {{ getServiceLabel(service) }}
+                            </span>
+                          }
+                        </div>
+                      </td>
                       <td>
                         <span class="status-dot" [class.online]="agent.isOnline"></span>
                         {{ agent.isOnline ? 'En ligne' : 'Hors ligne' }}
@@ -228,6 +238,28 @@ import { StatsService } from '../../services/stats.service';
     
     .status-dot.online { background: #38a169; }
     
+    .services-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    
+    .service-tag {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    
+    .service-tag[data-service="account"] { background: #bee3f8; color: #2c5282; }
+    .service-tag[data-service="loan"] { background: #fbd38d; color: #7c2d12; }
+    .service-tag[data-service="general"] { background: #c6f6d5; color: #22543d; }
+    .service-tag[data-service="registration"] { background: #fed7d7; color: #742a2a; }
+    .service-tag[data-service="consultation"] { background: #e9d8fd; color: #44337a; }
+    .service-tag[data-service="payment"] { background: #feebc8; color: #7c2d12; }
+    
     .service-bars { display: flex; flex-direction: column; gap: 1rem; }
     
     .service-bar {
@@ -333,6 +365,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       count,
       percentage: Math.round((count / total) * 100)
     }));
+  }
+
+  getServiceLabel(service: string): string {
+    return this.serviceLabels[service] || service;
   }
 }
 

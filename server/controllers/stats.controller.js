@@ -120,8 +120,9 @@ exports.getStats = async (req, res) => {
 // Get agent performance stats
 exports.getAgentStats = async (req, res) => {
   try {
-    const agents = await Agent.find({ isActive: true })
-      .select('firstName lastName counterNumber ticketsServedToday averageServiceTime isOnline currentTicket')
+    // Only return agents with role 'agent', exclude admin and supervisor
+    const agents = await Agent.find({ isActive: true, role: 'agent' })
+      .select('firstName lastName counterNumber ticketsServedToday averageServiceTime isOnline currentTicket services')
       .populate('currentTicket', 'ticketNumber serviceType');
 
     res.json({

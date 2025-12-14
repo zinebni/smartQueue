@@ -4,6 +4,16 @@ import { io, Socket } from 'socket.io-client';
 import { environment } from '../../environments/environment';
 import { Ticket } from '../models/ticket.model';
 
+/**
+ * SERVICE SOCKET AMÉLIORÉ
+ * 
+ * Améliorations :
+ * - Support des salles de service pour filtrage
+ * - Gestion améliorée de la connexion/déconnexion des agents
+ * - Émission des services de l'agent lors de la connexion
+ * - Logs détaillés pour debugging
+ */
+
 @Injectable({
   providedIn: 'root'
 })
@@ -79,19 +89,34 @@ export class SocketService {
   // Join room (e.g., 'admin', 'agents')
   joinRoom(room: string) {
     this.socket?.emit('join:room', room);
+    console.log(`📍 Joined room: ${room}`);
   }
 
   leaveRoom(room: string) {
     this.socket?.emit('leave:room', room);
+    console.log(`🚪 Left room: ${room}`);
   }
 
-  // Agent status
-  setAgentOnline(agentId: string) {
-    this.socket?.emit('agent:online', agentId);
+  // AMÉLIORATION: Rejoindre une salle de service
+  joinService(serviceType: string) {
+    this.socket?.emit('join:service', serviceType);
+    console.log(`📍 Joined service: ${serviceType}`);
   }
 
-  setAgentOffline(agentId: string) {
-    this.socket?.emit('agent:offline', agentId);
+  leaveService(serviceType: string) {
+    this.socket?.emit('leave:service', serviceType);
+    console.log(`🚪 Left service: ${serviceType}`);
+  }
+
+  // AMÉLIORATION: Agent status avec services
+  setAgentOnline(agentId: string, services?: string[]) {
+    this.socket?.emit('agent:online', { agentId, services });
+    console.log(`✅ Agent ${agentId} online with services:`, services);
+  }
+
+  setAgentOffline(agentId: string, services?: string[]) {
+    this.socket?.emit('agent:offline', { agentId, services });
+    console.log(`❌ Agent ${agentId} offline`);
   }
 
   // Observable getters

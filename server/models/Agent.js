@@ -54,10 +54,22 @@ const agentSchema = new mongoose.Schema({
   },
   
   // Services this agent can handle
-  services: [{
-    type: String,
-    enum: ['account', 'loan', 'general', 'registration', 'consultation', 'payment']
-  }],
+  // AMÉLIORATION: Chaque agent a maintenant une liste de services spécifiques
+  // Cela permet de filtrer les tickets par service et d'assurer qu'un agent
+  // ne peut prendre que les tickets correspondant à ses services
+  services: {
+    type: [{
+      type: String,
+      enum: ['account', 'loan', 'general', 'registration', 'consultation', 'payment']
+    }],
+    required: [true, 'Agent must have at least one service assigned'],
+    validate: {
+      validator: function(services) {
+        return services && services.length > 0;
+      },
+      message: 'Agent must have at least one service assigned'
+    }
+  },
   
   // Status
   isActive: {
@@ -121,6 +133,12 @@ agentSchema.pre('save', async function(next) {
 // Method to compare passwords
 agentSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// NOUVELLE MÉTHODE: Vérifie si l'agent peut gérer un type de service spécifique
+// Utilisé pour valider les permissions avant de prendre un ticket
+agentSchema.methods.canHandleService = function(serviceType) {
+  return this.services && this.services.includes(serviceType);
 };
 
 // Method to reset daily stats

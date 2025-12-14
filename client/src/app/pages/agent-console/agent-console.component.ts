@@ -276,19 +276,53 @@ export class AgentConsoleComponent implements OnInit, OnDestroy {
     this.agent = this.authService.agent();
     this.loadData();
     
+    // AMÉLIORATION: Rejoindre les salles de services de l'agent
     if (this.agent) {
-      this.socketService.setAgentOnline(this.agent._id);
+      // Émettre les services de l'agent lors de la connexion
+      this.socketService.setAgentOnline(this.agent._id, this.agent.services);
+      
+      // Rejoindre les salles de chaque service
+      if (this.agent.services && this.agent.services.length > 0) {
+        this.agent.services.forEach(service => {
+          this.socketService.joinService(service);
+        });
+      }
+      
+      console.log('✅ Agent console initialized for services:', this.agent.services);
     }
     
+    // AMÉLIORATION: Recharger uniquement les données pertinentes lors des événements
     this.subscriptions.push(
-      this.socketService.onTicketCreated().subscribe(() => this.loadWaitingTickets()),
-      this.socketService.onTicketUpdated().subscribe(() => this.loadData())
+      this.socketService.onTicketCreated().subscribe((ticket) => {
+        // Vérifier si le ticket est pour un des services de l'agent
+        if (this.agent?.services?.includes(ticket.serviceType)) {
+          console.log('📩 New ticket for my service:', ticket.ticketNumber);
+          this.loadWaitingTickets();
+        }
+      }),
+      this.socketService.onTicketUpdated().subscribe((ticket) => {
+        // Mettre à jour le ticket courant si c'est celui en cours
+        if (this.currentTicket && ticket._id === this.currentTicket._id) {
+          this.currentTicket = ticket;
+        }
+        // Recharger la file d'attente si c'est un ticket de nos services
+        if (this.agent?.services?.includes(ticket.serviceType)) {
+          this.loadWaitingTickets();
+        }
+      })
     );
   }
 
   ngOnDestroy() {
+    // AMÉLIORATION: Quitter les salles de services lors de la déconnexion
     if (this.agent) {
-      this.socketService.setAgentOffline(this.agent._id);
+      this.socketService.setAgentOffline(this.agent._id, this.agent.services);
+      
+      if (this.agent.services && this.agent.services.length > 0) {
+        this.agent.services.forEach(service => {
+          this.socketService.leaveService(service);
+        });
+      }
     }
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
@@ -300,35 +334,58 @@ export class AgentConsoleComponent implements OnInit, OnDestroy {
           this.agent = response.data;
           this.currentTicket = response.data.currentTicket || null;
         }
+      },
+      error: (err) => {
+        console.error('❌ Error loading agent data:', err);
+        this.error = 'Erreur lors du chargement des données';
       }
     });
     this.loadWaitingTickets();
   }
 
+  // AMÉLIORATION: Charger uniquement les tickets des services de l'agent
   loadWaitingTickets() {
+    if (!this.agent || !this.agent.services || this.agent.services.length === 0) {
+      console.warn('⚠️ No services assigned to agent');
+      this.waitingTickets = [];
+      return;
+    }
+
+    // Le backend filtrera automatiquement par services de l'agent
     this.ticketService.getWaitingTickets().subscribe({
       next: (response) => {
-        if (response.data) this.waitingTickets = response.data;
+        if (response.data) {
+          this.waitingTickets = response.data;
+          console.log(`📋 Loaded ${this.waitingTickets.length} waiting tickets for my services`);
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error loading waiting tickets:', err);
       }
     });
   }
 
+  // AMÉLIORATION: Messages d'erreur plus clairs
   callNext() {
     this.loading = true;
     this.error = '';
+    
     this.adminService.callNextTicket().subscribe({
       next: (response) => {
         this.loading = false;
         if (response.success && response.data) {
           this.currentTicket = response.data;
           this.loadWaitingTickets();
+          console.log('✅ Called ticket:', response.data.ticketNumber);
         } else {
           this.error = response.message || 'Aucun ticket en attente';
         }
       },
       error: (err) => {
         this.loading = false;
-        this.error = err.error?.message || 'Erreur';
+        const errorMessage = err.error?.message || 'Erreur lors de l\'appel du ticket';
+        this.error = errorMessage;
+        console.error('❌ Error calling next ticket:', errorMessage);
       }
     });
   }
@@ -336,7 +393,14 @@ export class AgentConsoleComponent implements OnInit, OnDestroy {
   startServing() {
     this.adminService.startServing().subscribe({
       next: (response) => {
-        if (response.data) this.currentTicket = response.data;
+        if (response.data) {
+          this.currentTicket = response.data;
+          console.log('✅ Started serving ticket:', response.data.ticketNumber);
+        }
+      },
+      error: (err) => {
+        this.error = err.error?.message || 'Erreur lors du démarrage du service';
+        console.error('❌ Error starting service:', err);
       }
     });
   }
@@ -344,18 +408,29 @@ export class AgentConsoleComponent implements OnInit, OnDestroy {
   completeTicket() {
     this.adminService.completeTicket().subscribe({
       next: () => {
+        console.log('✅ Ticket completed');
         this.currentTicket = null;
         this.loadData();
+      },
+      error: (err) => {
+        this.error = err.error?.message || 'Erreur lors de la complétion du ticket';
+        console.error('❌ Error completing ticket:', err);
       }
     });
   }
 
   markNoShow() {
     if (!confirm('Marquer ce client comme absent ?')) return;
+    
     this.adminService.markNoShow().subscribe({
       next: () => {
+        console.log('✅ Ticket marked as no-show');
         this.currentTicket = null;
         this.loadData();
+      },
+      error: (err) => {
+        this.error = err.error?.message || 'Erreur lors du marquage d\'absence';
+        console.error('❌ Error marking no-show:', err);
       }
     });
   }
