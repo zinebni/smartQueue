@@ -13,8 +13,7 @@ import { SocketService } from './services/socket.service';
       <header class="header">
         <div class="header-content">
           <a routerLink="/" class="logo">
-            <span class="logo-icon">🎫</span>
-            <span class="logo-text">Smart Queue</span>
+            <span class="logo-text">SmartSaf</span>
           </a>
           
           <nav class="nav">
@@ -56,7 +55,7 @@ import { SocketService } from './services/socket.service';
       </main>
       
       <footer class="footer">
-        <p>© 2024 Smart Queue - Gestion Intelligente des Files d'Attente</p>
+        <p>© 2025 SmartSaf - Système Professionnel de Gestion des Files d'Attente</p>
       </footer>
     </div>
   `,
@@ -68,10 +67,13 @@ import { SocketService } from './services/socket.service';
     }
     
     .header {
-      background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+      background: linear-gradient(135deg, #1F2933 0%, #14B8A6 100%);
       color: white;
       padding: 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(20, 184, 166, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
     
     .header-content {
@@ -88,11 +90,10 @@ import { SocketService } from './services/socket.service';
       gap: 0.5rem;
       color: white;
       text-decoration: none;
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 700;
+      letter-spacing: -0.02em;
     }
-    
-    .logo-icon { font-size: 2rem; }
     
     .nav {
       display: flex;
@@ -136,11 +137,12 @@ import { SocketService } from './services/socket.service';
     }
     
     .footer {
-      background: #1a202c;
-      color: #a0aec0;
+      background: #1F2933;
+      color: #9CA3AF;
       text-align: center;
       padding: 1.5rem;
       margin-top: auto;
+      border-top: 3px solid #14B8A6;
     }
     
     @media (max-width: 768px) {

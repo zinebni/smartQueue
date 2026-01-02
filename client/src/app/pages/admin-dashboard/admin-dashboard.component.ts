@@ -15,7 +15,7 @@ import { StatsService } from '../../services/stats.service';
       <div class="dashboard-header">
         <h1>
           <span class="material-icons">dashboard</span>
-          Tableau de Bord
+          SmartSaf - Tableau de Bord
         </h1>
         <p>Mise à jour en temps réel</p>
       </div>
@@ -202,14 +202,15 @@ import { StatsService } from '../../services/stats.service';
       margin-bottom: 1rem;
     }
     
-    .perf-value { font-size: 2rem; font-weight: 700; color: #1a365d; }
+    .perf-value { font-size: 2rem; font-weight: 700; color: #3A1C71; }
     
     .card h2 {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: #1a365d;
+      color: #3A1C71;
       margin-bottom: 1.5rem;
+      font-weight: 600;
     }
     
     .agents-table { overflow-x: auto; }
@@ -222,10 +223,10 @@ import { StatsService } from '../../services/stats.service';
     th, td {
       padding: 1rem;
       text-align: left;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e8eaf0;
     }
     
-    th { background: #f7fafc; font-weight: 600; color: #4a5568; }
+    th { background: #F5F6FA; font-weight: 600; color: #2D2D2D; }
     
     .status-dot {
       display: inline-block;
@@ -236,7 +237,7 @@ import { StatsService } from '../../services/stats.service';
       margin-right: 0.5rem;
     }
     
-    .status-dot.online { background: #38a169; }
+    .status-dot.online { background: #00B894; }
     
     .services-tags {
       display: flex;
@@ -340,7 +341,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   loadStats() {
     this.statsService.getStats().subscribe({
-      next: (response) => {
+      next: (response: any) => {
         if (response.data) this.stats = response.data;
       }
     });
@@ -348,7 +349,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   loadAgents() {
     this.statsService.getAgentStats().subscribe({
-      next: (response) => {
+      next: (response: any) => {
         if (response.data) this.agents = response.data;
       }
     });

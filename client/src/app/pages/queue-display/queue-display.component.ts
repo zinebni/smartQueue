@@ -12,7 +12,7 @@ import { StatsService } from '../../services/stats.service';
   template: `
     <div class="queue-display-page">
       <header class="display-header">
-        <h1>🎫 Smart Queue</h1>
+        <h1>SmartSaf</h1>
         <div class="time">{{ currentTime | date:'HH:mm:ss' }}</div>
       </header>
       
@@ -72,7 +72,7 @@ import { StatsService } from '../../services/stats.service';
   styles: [`
     .queue-display-page {
       min-height: 100vh;
-      background: linear-gradient(135deg, #1a365d 0%, #0d1b2a 100%);
+      background: linear-gradient(135deg, #1F2933 0%, #0F172A 100%);
       color: white;
       display: flex;
       flex-direction: column;
@@ -83,11 +83,13 @@ import { StatsService } from '../../services/stats.service';
       justify-content: space-between;
       align-items: center;
       padding: 1.5rem 2rem;
-      background: rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      border-bottom: 3px solid #14B8A6;
     }
     
-    .display-header h1 { font-size: 2rem; }
-    .time { font-size: 2rem; font-family: monospace; }
+    .display-header h1 { font-size: 2.25rem; font-weight: 700; }
+    .time { font-size: 2rem; font-family: monospace; font-weight: 500; }
     
     .display-content {
       flex: 1;
@@ -98,9 +100,11 @@ import { StatsService } from '../../services/stats.service';
     }
     
     .now-serving, .waiting-section {
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.08);
       border-radius: 16px;
       padding: 2rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
     }
     
     h2 {
@@ -111,6 +115,7 @@ import { StatsService } from '../../services/stats.service';
       font-size: 1.5rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      font-weight: 600;
     }
     
     .serving-grid {
@@ -120,7 +125,7 @@ import { StatsService } from '../../services/stats.service';
     }
     
     .serving-card {
-      background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+      background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
       padding: 2rem;
       border-radius: 16px;
       text-align: center;

@@ -112,45 +112,76 @@ import { CreateTicketRequest, SERVICE_TYPES, Ticket } from '../../models/ticket.
     </div>
   `,
   styles: [`
-    .create-ticket-page { max-width: 600px; margin: 0 auto; }
+    .create-ticket-page { max-width: 650px; margin: 0 auto; padding: 1rem; }
     
-    .ticket-form-card { padding: 2rem; }
+    .ticket-form-card { padding: 2.5rem; }
     
     h1 {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: #1a365d;
+      color: #1F2933;
       margin-bottom: 2rem;
+      font-weight: 700;
+      font-size: 1.75rem;
     }
     
     .service-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+      gap: 1.25rem;
     }
     
     .service-option {
-      padding: 1.5rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
+      padding: 2rem;
+      border: 2px solid #E5E7EB;
+      border-radius: 16px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: white;
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(20, 184, 166, 0.1), transparent);
+        transition: left 0.5s ease;
+      }
+
+      &:hover::after {
+        left: 100%;
+      }
     }
     
-    .service-option:hover { border-color: #2b6cb0; }
+    .service-option:hover { 
+      border-color: #14B8A6;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(20, 184, 166, 0.2);
+    }
     
     .service-option.selected {
-      border-color: #2b6cb0;
-      background: #ebf8ff;
+      border-color: #14B8A6;
+      background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(31, 41, 51, 0.05));
+      box-shadow: 0 8px 20px rgba(20, 184, 166, 0.25);
+      border-width: 3px;
     }
     
     .service-option .material-icons {
       display: block;
-      font-size: 2rem;
-      color: #2b6cb0;
-      margin-bottom: 0.5rem;
+      font-size: 3rem;
+      color: #14B8A6;
+      margin-bottom: 0.75rem;
+      transition: transform 0.3s ease;
+    }
+
+    .service-option:hover .material-icons {
+      transform: scale(1.15) rotate(5deg);
     }
     
     .full-width { width: 100%; }
@@ -158,36 +189,72 @@ import { CreateTicketRequest, SERVICE_TYPES, Ticket } from '../../models/ticket.
     .ticket-created { text-align: center; }
     
     .success-icon .material-icons {
-      font-size: 4rem;
-      color: #38a169;
+      font-size: 4.5rem;
+      color: #22C55E;
       animation: scaleIn 0.3s ease-out;
     }
     
     .ticket-display {
-      background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+      background: linear-gradient(135deg, #1F2933 0%, #14B8A6 100%);
       color: white;
-      padding: 2rem;
-      border-radius: 16px;
+      padding: 3.5rem 2.5rem;
+      border-radius: 20px;
       margin: 1.5rem 0;
+      box-shadow: 0 25px 50px -12px rgba(20, 184, 166, 0.4);
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+      }
+
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
     }
     
     .ticket-number-large {
-      font-size: 3.5rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
+      font-size: 5rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 1;
     }
     
-    .ticket-service { font-size: 1.25rem; opacity: 0.9; margin-top: 0.5rem; }
+    .ticket-service { 
+      font-size: 1.35rem; 
+      opacity: 0.95; 
+      margin-top: 0.75rem; 
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
     
-    .ticket-info { margin: 1.5rem 0; }
+    .ticket-info { 
+      margin: 2rem 0;
+      position: relative;
+      z-index: 1;
+    }
     
     .info-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      padding: 0.5rem;
-      color: #4a5568;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
     }
     
     .ticket-actions { display: flex; gap: 1rem; justify-content: center; margin: 1.5rem 0; }

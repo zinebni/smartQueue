@@ -1,15 +1,15 @@
-// Variables
-$primary-color: #1a365d;
-$secondary-color: #2b6cb0;
-$accent-color: #38a169;
-$warning-color: #dd6b20;
-$danger-color: #e53e3e;
-$success-color: #38a169;
-$background-color: #f7fafc;
+// 🎨 PALETTE GRIS ANTHRACITE & TURQUOISE - SmartSaf
+$primary-color: #1F2933;      // Gris foncé
+$secondary-color: #14B8A6;    // Turquoise
+$accent-color: #14B8A6;
+$warning-color: #F59E0B;      // Attention
+$danger-color: #EF4444;       // Erreur
+$success-color: #22C55E;      // Succès
+$background-color: #F9FAFB;   // Fond blanc/gris clair
 $card-bg: #ffffff;
-$text-primary: #1a202c;
-$text-secondary: #718096;
-$border-color: #e2e8f0;
+$text-primary: #111827;       // Texte
+$text-secondary: #6B7280;
+$border-color: #E5E7EB;
 
 // Reset & Base
 * {
@@ -25,6 +25,8 @@ html, body {
   line-height: 1.6;
   color: $text-primary;
   background-color: $background-color;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -44,10 +46,17 @@ a {
 
 .card {
   background: $card-bg;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  padding: 1.5rem;
-  margin-bottom: 1rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(20, 184, 166, 0.1), 0 4px 6px -2px rgba(20, 184, 166, 0.05);
+    transform: translateY(-2px);
+  }
 }
 
 .btn {
@@ -56,31 +65,38 @@ a {
   justify-content: center;
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   gap: 0.5rem;
+  letter-spacing: 0.025em;
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
   }
 
   &-primary {
-    background: $primary-color;
+    background: linear-gradient(135deg, $primary-color 0%, #14B8A6 100%);
     color: white;
+    box-shadow: 0 4px 6px -1px rgba(20, 184, 166, 0.3), 0 2px 4px -1px rgba(20, 184, 166, 0.2);
     &:hover:not(:disabled) {
-      background: darken($primary-color, 10%);
+      box-shadow: 0 10px 15px -3px rgba(20, 184, 166, 0.4), 0 4px 6px -2px rgba(20, 184, 166, 0.3);
+      transform: translateY(-2px);
     }
   }
 
   &-secondary {
     background: $secondary-color;
     color: white;
+    box-shadow: 0 4px 6px -1px rgba(20, 184, 166, 0.3), 0 2px 4px -1px rgba(20, 184, 166, 0.2);
     &:hover:not(:disabled) {
-      background: darken($secondary-color, 10%);
+      background: darken($secondary-color, 8%);
+      box-shadow: 0 10px 15px -3px rgba(20, 184, 166, 0.4), 0 4px 6px -2px rgba(20, 184, 166, 0.3);
+      transform: translateY(-2px);
     }
   }
 
@@ -137,16 +153,22 @@ a {
 
   input, select, textarea {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid $border-color;
-    border-radius: 8px;
+    padding: 0.875rem 1rem;
+    border: 2px solid $border-color;
+    border-radius: 10px;
     font-size: 1rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
 
     &:focus {
       outline: none;
       border-color: $secondary-color;
-      box-shadow: 0 0 0 3px rgba($secondary-color, 0.1);
+      box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+      transform: translateY(-1px);
+    }
+
+    &:hover:not(:focus) {
+      border-color: darken($border-color, 10%);
     }
   }
 
@@ -165,18 +187,20 @@ a {
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0.75rem;
+  padding: 0.375rem 0.875rem;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
-  &-waiting { background: #fef3c7; color: #92400e; }
-  &-called { background: #dbeafe; color: #1e40af; }
-  &-serving { background: #d1fae5; color: #065f46; }
-  &-completed { background: #e5e7eb; color: #374151; }
-  &-cancelled { background: #fee2e2; color: #991b1b; }
-  &-no-show { background: #fce7f3; color: #9d174d; }
+  &-waiting { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+  &-called { background: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE; }
+  &-serving { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+  &-completed { background: #E5E7EB; color: #374151; border: 1px solid #D1D5DB; }
+  &-cancelled { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+  &-no-show { background: #FCE7F3; color: #9D174D; border: 1px solid #FBCFE8; }
 }
 
 // Grid System

@@ -16,7 +16,7 @@ import { Ticket, Agent, STATUS_LABELS, SERVICE_TYPES } from '../../models/ticket
     <div class="agent-console">
       <div class="console-header">
         <div class="agent-info">
-          <h1>Console Agent</h1>
+          <h1>Console Agent - SmartSaf</h1>
           <p>
             <span class="material-icons">person</span>
             {{ agent?.firstName }} {{ agent?.lastName }}
@@ -129,10 +129,11 @@ import { Ticket, Agent, STATUS_LABELS, SERVICE_TYPES } from '../../models/ticket
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
-      padding: 1.5rem;
-      background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
-      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      background: linear-gradient(135deg, #1F2933 0%, #14B8A6 100%);
+      border-radius: 16px;
       color: white;
+      box-shadow: 0 10px 25px -5px rgba(20, 184, 166, 0.3);
     }
     
     .agent-info h1 { margin-bottom: 0.5rem; }
@@ -200,12 +201,13 @@ import { Ticket, Agent, STATUS_LABELS, SERVICE_TYPES } from '../../models/ticket
     .no-ticket p { margin: 1rem 0; }
     
     .count-badge {
-      background: #e2e8f0;
-      color: #1a365d;
+      background: #F9FAFB;
+      color: #1F2933;
       padding: 0.25rem 0.75rem;
       border-radius: 999px;
       font-size: 0.875rem;
       margin-left: auto;
+      font-weight: 600;
     }
     
     .queue-list { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -215,17 +217,17 @@ import { Ticket, Agent, STATUS_LABELS, SERVICE_TYPES } from '../../models/ticket
       align-items: center;
       gap: 1rem;
       padding: 1rem;
-      background: #f7fafc;
+      background: #F9FAFB;
       border-radius: 8px;
-      border-left: 4px solid #e2e8f0;
+      border-left: 4px solid #14B8A6;
     }
     
-    .queue-item.priority { border-left-color: #dd6b20; }
+    .queue-item.priority { border-left-color: #F59E0B; }
     
     .position {
       width: 28px;
       height: 28px;
-      background: #1a365d;
+      background: #1F2933;
       color: white;
       border-radius: 50%;
       display: flex;

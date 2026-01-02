@@ -12,9 +12,8 @@ import { AuthService } from '../../services/auth.service';
     <div class="login-page">
       <div class="card login-card">
         <div class="login-header">
-          <span class="logo-icon">🎫</span>
-          <h1>Smart Queue</h1>
-          <p>Connexion Agent / Admin</p>
+          <h1>SmartSaf</h1>
+          <p>Espace Agent / Administrateur</p>
         </div>
         
         <form (ngSubmit)="login()">
@@ -78,37 +77,45 @@ import { AuthService } from '../../services/auth.service';
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 2rem;
     }
     
     .login-card {
       width: 100%;
-      max-width: 400px;
-      padding: 2.5rem;
+      max-width: 450px;
+      padding: 3rem;
+      box-shadow: 0 10px 40px rgba(20, 184, 166, 0.12);
+      border-top: 4px solid #14B8A6;
     }
     
     .login-header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 3px solid #14B8A6;
     }
-    
-    .logo-icon { font-size: 3rem; }
     
     .login-header h1 {
-      color: #1a365d;
-      margin: 0.5rem 0 0.25rem;
+      color: #1F2933;
+      margin: 0 0 0.5rem;
+      font-weight: 700;
+      font-size: 2.25rem;
+      letter-spacing: -0.02em;
     }
     
-    .login-header p { color: #718096; }
+    .login-header p { color: #6B7280; font-size: 1rem; }
     
     .form-group label {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      color: #111827;
+      font-weight: 500;
     }
     
     .form-group label .material-icons {
       font-size: 1.25rem;
-      color: #718096;
+      color: #14B8A6;
     }
     
     .full-width { width: 100%; }
