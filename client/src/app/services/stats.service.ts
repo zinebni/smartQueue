@@ -21,8 +21,11 @@ export class StatsService {
   }
 
   // Get queue status (public - for display)
-  getQueueStatus(): Observable<ApiResponse<QueueStatus>> {
-    return this.http.get<ApiResponse<QueueStatus>>(`${this.apiUrl}/queue`);
+  getQueueStatus(service?: string): Observable<ApiResponse<QueueStatus>> {
+    const url = service 
+      ? `${this.apiUrl}/queue?service=${service}`
+      : `${this.apiUrl}/queue`;
+    return this.http.get<ApiResponse<QueueStatus>>(url);
   }
 
   // Get agent performance stats (admin/supervisor only)

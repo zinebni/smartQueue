@@ -30,7 +30,7 @@ export const routes: Routes = [
     canActivate: [authGuard, adminGuard]
   },
   {
-    path: 'display',
+    path: 'display/:service',
     loadComponent: () => import('./pages/queue-display/queue-display.component').then(m => m.QueueDisplayComponent)
   },
   {

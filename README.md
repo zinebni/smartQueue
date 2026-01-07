@@ -22,12 +22,18 @@ Système complet de gestion intelligente des files d'attente avec **filtrage par
 - Mise à jour automatique des files d'attente
 - Performance optimisée
 
+### � Affichages Publics par Service
+- **Écran dédié pour chaque service** : Chaque service dispose de son propre affichage public
+- **Filtrage intelligent** : Chaque écran n'affiche que les tickets de son service
+- **Multi-écrans** : Installez plusieurs écrans dans différentes zones
+- **Mise à jour temps réel** : Synchronisation instantanée via WebSocket
+- **URLs dédiées** : `/display/account`, `/display/loan`, `/display/payment`, etc.
+
 ### 📊 Autres Fonctionnalités
 - Création et gestion de tickets
 - File d'attente intelligente avec priorités
 - Statistiques en temps réel
 - Interface agent intuitive
-- Affichage public pour les clients
 - Responsive design
 
 ---
@@ -157,7 +163,8 @@ Après avoir exécuté `npm run seed` dans le dossier server:
 |---------|----------|-------------|
 | POST | `/api/tickets` | Créer un ticket |
 | GET | `/api/tickets/number/:num` | Ticket par numéro |
-| GET | `/api/stats/queue` | Statut de la file |
+| GET | `/api/stats/queue` | Statut de la file (tous services) |
+| GET | `/api/stats/queue?serviceType=account` | Statut de la file (service spécifique) |
 
 ### Authentification
 | Méthode | Endpoint | Description |
@@ -279,6 +286,55 @@ npm start            # ng serve sur http://localhost:4200
 npm run build        # Build production
 npm run build:prod   # Build optimisé
 ```
+
+### Scripts PowerShell (Racine)
+```powershell
+.\start.ps1          # Démarrer tous les services Docker
+.\open-displays.ps1  # Ouvrir les écrans d'affichage public
+```
+
+---
+
+## 📺 Affichages Publics par Service
+
+### Concept
+Chaque service dispose de **son propre écran public** qui affiche **UNIQUEMENT** les tickets de ce service.
+
+### URLs des Écrans
+
+| Service | URL | Affiche |
+|---------|-----|---------|
+| **Tous les services** | `http://localhost:3000/display` | Tous les tickets |
+| **Services Généraux** | `http://localhost:3000/display/general` | Tickets GEN-XXX uniquement |
+| **Gestion de Compte** | `http://localhost:3000/display/account` | Tickets ACC-XXX uniquement |
+| **Crédit / Prêt** | `http://localhost:3000/display/loan` | Tickets LON-XXX uniquement |
+| **Inscription** | `http://localhost:3000/display/registration` | Tickets REG-XXX uniquement |
+| **Consultation** | `http://localhost:3000/display/consultation` | Tickets CON-XXX uniquement |
+| **Paiement** | `http://localhost:3000/display/payment` | Tickets PAY-XXX uniquement |
+
+### Utilisation
+
+1. **Ouvrez l'écran** de votre choix dans un navigateur
+2. **Appuyez sur F11** pour le mode plein écran
+3. **L'écran affiche** :
+   - Les tickets en cours de service pour ce service
+   - Les 8 prochains tickets en attente pour ce service
+   - Un badge indiquant le service filtré
+   - Mise à jour en temps réel
+
+### Exemple : Banque avec 3 Zones
+
+```
+📺 Hall Principal    → http://localhost:3000/display          (tous les tickets)
+📺 Zone Comptes      → http://localhost:3000/display/account  (tickets compte)
+📺 Zone Crédits      → http://localhost:3000/display/loan     (tickets crédit)
+📺 Zone Paiements    → http://localhost:3000/display/payment  (tickets paiement)
+```
+
+### Démo Visuelle
+Ouvrez `public-displays-demo.html` dans votre navigateur pour voir une démo interactive du système d'affichage.
+
+**Documentation complète** : Voir [GUIDE_AFFICHAGE_PUBLIC.md](GUIDE_AFFICHAGE_PUBLIC.md)
 
 ---
 
