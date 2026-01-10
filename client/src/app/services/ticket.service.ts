@@ -1,4 +1,9 @@
-import { Injectable } from '@angular/core';
+/**
+ * Service de gestion des tickets
+ * Gère toutes les opérations CRUD liées aux tickets de la file d'attente
+ * @author Smart Queue Team
+ * @version 1.0.0
+ */import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';

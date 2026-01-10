@@ -1,22 +1,37 @@
+/**
+ * Intercepteur HTTP d'authentification
+ * Ajoute automatiquement le token JWT à toutes les requêtes HTTP sortantes
+ * Gère les erreurs d'authentification (401) en déconnectant l'utilisateur
+ * @author Smart Queue Team
+ */
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-// Interceptor to add auth token to requests and handle 401 errors (Unauthorized)
-// will be used in app.module.ts providers array
-// to protect routes and redirect to login on auth failure
-// It retrieves the token from AuthService and appends it to the Authorization header
-
+/**
+ * Intercepteur pour ajouter le token d'auth aux requêtes et gérer les erreurs 401
+ * 
+ * Fonctionnalités:
+ * - Ajoute automatiquement le header Authorization avec le token JWT
+ * - Intercepte les erreurs 401 (Non autorisé)
+ * - Déconnecte l'utilisateur et redirige vers login en cas d'erreur 401
+ * 
+ * Utilisation: Déclaré dans app.config.ts comme intercepteur global
+ */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  // Injection des services nécessaires
   const authService = inject(AuthService);
   const router = inject(Router);
   
+  // Récupération du token JWT depuis le service d'auth
   const token = authService.getToken();
   
-  let authReq = req; // Clone the request to avoid mutating the original request
-  //if token exists, add it to the request headers 
+  // Clone de la requête pour éviter de muter l'original
+  let authReq = req;
+  
+  // Si un token existe, l'ajouter au header Authorization
   if (token) {
     authReq = req.clone({
       setHeaders: {
@@ -24,13 +39,21 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
     });
   }
-  // Handle the request and catch 401 errors to log out and redirect to login
+  
+  /**
+   * Traitement de la requête et gestion des erreurs
+   * Intercepte les erreurs 401 pour déconnecter automatiquement l'utilisateur
+   */
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
+      // Si erreur 401 (token expiré ou invalide)
       if (error.status === 401) {
+        // Déconnexion de l'utilisateur
         authService.logout().subscribe();
+        // Redirection vers la page de connexion
         router.navigate(['/login']);
       }
+      // Propagation de l'erreur pour traitement supplémentaire si nécessaire
       return throwError(() => error);
     })
   );

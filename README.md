@@ -2,6 +2,12 @@
 
 Système complet de gestion intelligente des files d'attente avec **filtrage par service** pour banques, universités et agences professionnelles.
 
+## 📋 Table des matières
+- [Fonctionnalités](#-fonctionnalités-principales)
+- [Installation](#-installation)
+- [Technologies](#-technologies-utilisées)
+- [Architecture](#-architecture-du-projet)
+
 ## ✨ Fonctionnalités Principales
 
 ### 🎯 Gestion des Services par Agent

@@ -1,3 +1,11 @@
+/**
+ * Composant de la console agent
+ * Interface principale pour que les agents gèrent les tickets
+ * - Appel de tickets
+ * - Gestion du statut des tickets
+ * - Visualisation de la file d'attente
+ * @author Smart Queue Team
+ */
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

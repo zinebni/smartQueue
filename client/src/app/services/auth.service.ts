@@ -1,3 +1,9 @@
+/**
+ * Service d'authentification et gestion des sessions
+ * Gère la connexion, déconnexion et vérification des permissions des agents
+ * @author Smart Queue Team
+ * @version 1.0.0
+ */
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, of } from 'rxjs';

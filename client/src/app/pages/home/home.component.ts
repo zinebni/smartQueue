@@ -117,7 +117,8 @@ import { StatsService } from '../../services/stats.service';
       flex-wrap: wrap;
     }
     
-    .hero-actions .btn { min-width: 200px; }
+    .hero-actions .btn { min-width: 200px; text-decoration: none; }
+    .hero-actions .btn:hover { text-decoration: none; }
     .hero-actions .btn-outline { border-color: white; color: white; }
     .hero-actions .btn-outline:hover { background: white; color: #1a365d; }
     
@@ -196,34 +197,64 @@ import { StatsService } from '../../services/stats.service';
     }
   `]
 })
+/**
+ * Composant de la page d'accueil
+ * Affiche l'état actuel de la file d'attente et les services disponibles
+ */
 export class HomeComponent implements OnInit, OnDestroy {
+  /** État actuel de la file d'attente */
   queueStatus: QueueStatus | null = null;
+  
+  /** Liste des souscriptions pour le nettoyage */
   private subscriptions: Subscription[] = [];
 
+  /**
+   * Constructeur
+   * @param statsService Service pour récupérer les statistiques
+   * @param socketService Service pour les mises à jour en temps réel
+   */
   constructor(
     private statsService: StatsService,
     private socketService: SocketService
   ) {}
 
+  /**
+   * Initialisation du composant
+   * - Charge l'état initial de la file
+   * - S'abonne aux événements temps réel
+   * - Configure le rafraîchissement automatique
+   */
   ngOnInit() {
+    // Chargement initial de l'état de la file
     this.loadQueueStatus();
     
-    // Subscribe to real-time updates
+    // Souscription aux mises à jour temps réel via WebSocket
     this.subscriptions.push(
+      // Mise à jour quand un ticket est appelé
       this.socketService.onTicketCalled().subscribe(() => this.loadQueueStatus()),
+      // Mise à jour quand un ticket est modifié
       this.socketService.onTicketUpdated().subscribe(() => this.loadQueueStatus()),
+      // Mise à jour quand un nouveau ticket est créé
       this.socketService.onTicketCreated().subscribe(() => this.loadQueueStatus())
     );
 
-    // Refresh every 30 seconds
+    // Rafraîchissement automatique toutes les 30 secondes
     const interval = setInterval(() => this.loadQueueStatus(), 30000);
     this.subscriptions.push({ unsubscribe: () => clearInterval(interval) } as Subscription);
   }
 
+  /**
+   * Nettoyage lors de la destruction du composant
+   * Désabonnement de tous les observables pour éviter les fuites mémoire
+   */
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
+  /**
+   * Charge l'état actuel de la file d'attente
+   * Récupère les tickets en cours de service et les prochains en attente
+   */
   loadQueueStatus() {
     this.statsService.getQueueStatus().subscribe({
       next: (response) => {

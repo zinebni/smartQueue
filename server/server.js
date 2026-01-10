@@ -1,29 +1,50 @@
+/**
+ * Point d'entrée du serveur Smart Queue
+ * Configure et démarre le serveur HTTP avec Socket.IO
+ * Gère la connexion à MongoDB et l'initialisation des services
+ * @module Server
+ */
 const path = require('path');
 
-// Load environment variables from .env file (fallback to .env.example for development)
+/**
+ * Chargement des variables d'environnement
+ * Utilise .env pour la configuration (fallback vers .env.example pour dev)
+ */
 require('dotenv').config({
   path: path.resolve(__dirname, '.env'),
 });
 
+// Dépendances principales
 const http = require('http');
 const app = require('./app');
 const connectDB = require('./config/db');
 const config = require('./config');
 const socketService = require('./services/socket.service');
 
-// Create HTTP server
+/**
+ * Création du serveur HTTP
+ * Enveloppe l'application Express pour supporter Socket.IO
+ */
 const server = http.createServer(app);
 
-// Initialize Socket.io
+/**
+ * Initialisation de Socket.IO
+ * Configure la communication temps réel pour les mises à jour de tickets
+ */
 socketService.init(server);
 
-// Connect to MongoDB and start server
+/**
+ * Démarrage du serveur
+ * 1. Connexion à MongoDB
+ * 2. Démarrage du serveur HTTP
+ * 3. Affichage des informations de démarrage
+ */
 const startServer = async () => {
   try {
-    // Connect to database
+    // Étape 1: Connexion à la base de données
     await connectDB();
 
-    // Start listening
+    // Étape 2: Démarrage du serveur sur le port configuré
     server.listen(config.port, () => {
       console.log('🚀 ================================');
       console.log(`🚀 Smart Queue API Server`);

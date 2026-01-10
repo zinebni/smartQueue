@@ -1,22 +1,33 @@
+/**
+ * Configuration principale de l'application Express
+ * Définit les middlewares, routes et configuration CORS
+ * @module App
+ */
 const express = require('express');
 const cors = require('cors');
 const config = require('./config');
 
-// Import routes
+// Import des routes
 const ticketRoutes = require('./routes/ticket.routes');
 const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
 const statsRoutes = require('./routes/stats.routes');
 
+// Initialisation de l'application Express
 const app = express();
 
-// Middleware - CORS configuration with multiple origins support
+/**
+ * Configuration CORS (Cross-Origin Resource Sharing)
+ * Permet les requêtes depuis plusieurs origines (frontend)
+ * Support de plusieurs domaines configurés via clientUrl
+ */
 const allowedOrigins = config.clientUrl.split(',').map(url => url.trim());
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc.)
+    // Autoriser les requêtes sans origine (apps mobiles, curl, etc.)
     if (!origin) return callback(null, true);
 
+    // Vérifier si l'origine est dans la liste autorisée
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -24,18 +35,29 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true // Autoriser les cookies et credentials
 }));
+
+/**
+ * Middlewares globaux
+ */
+// Parser pour JSON et URL-encoded bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging middleware
+/**
+ * Middleware de logging des requêtes
+ * Enregistre chaque requête avec timestamp, méthode et chemin
+ */
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
 });
 
-// Health check endpoint
+/**
+ * Endpoint de vérification de santé (health check)
+ * Utilisé pour monitoring et Docker healthcheck
+ */
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
@@ -44,10 +66,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API Routes
-app.use('/api/tickets', ticketRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
+/**
+ * Routes de l'API
+ */
+app.use('/api/tickets', ticketRoutes);   // Gestion des tickets
+app.use('/api/auth', authRoutes);         // Authentification
+app.use('/api/admin', adminRoutes);       // Administration
 app.use('/api/stats', statsRoutes);
 
 // 404 handler

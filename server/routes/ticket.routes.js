@@ -1,26 +1,61 @@
+/**
+ * Routes pour la gestion des tickets
+ * Définit tous les endpoints API pour les opérations sur les tickets
+ * @module TicketRoutes
+ */
 const express = require('express');
 const router = express.Router();
 const ticketController = require('../controllers/ticket.controller');
 const { protect, optionalAuth } = require('../middleware/auth.middleware');
 
-// Public routes
-// POST /api/tickets - Create a new ticket (public - pour kiosques/clients)
+/**
+ * Routes publiques (accessibles sans authentification)
+ */
+
+/**
+ * Création d'un nouveau ticket
+ * @route POST /api/tickets
+ * @access Public - Accessible depuis les kiosques/clients
+ */
 router.post('/', ticketController.createTicket);
 
-// CORRECTION: Ajouter protection pour filtrer par services de l'agent
-// GET /api/tickets - Get tickets (PROTÉGÉ - filtrage par service automatique)
+/**
+ * Routes protégées (nécessitent authentification)
+ */
+
+/**
+ * Récupération de la liste des tickets
+ * @route GET /api/tickets
+ * @access Protégé - Filtrage automatique par service de l'agent
+ */
 router.get('/', protect, ticketController.getTickets);
 
-// GET /api/tickets/:id - Get single ticket by ID (PROTÉGÉ - vérification permissions)
+/**
+ * Récupération d'un ticket par son ID
+ * @route GET /api/tickets/:id
+ * @access Protégé - Vérification des permissions
+ */
 router.get('/:id', protect, ticketController.getTicketById);
 
-// GET /api/tickets/number/:ticketNumber - Get ticket by ticket number (PUBLIC - pour clients)
+/**
+ * Récupération d'un ticket par son numéro
+ * @route GET /api/tickets/number/:ticketNumber
+ * @access Public - Pour que les clients vérifient leur statut
+ */
 router.get('/number/:ticketNumber', ticketController.getTicketByNumber);
 
-// POST /api/tickets/:id/checkin - Check-in ticket (PUBLIC - pour kiosques)
+/**
+ * Enregistrement de l'arrivée d'un client (check-in)
+ * @route POST /api/tickets/:id/checkin
+ * @access Public - Pour kiosques d'enregistrement
+ */
 router.post('/:id/checkin', ticketController.checkinTicket);
 
-// POST /api/tickets/:id/cancel - Cancel ticket (PROTÉGÉ - agents seulement)
+/**
+ * Annulation d'un ticket
+ * @route POST /api/tickets/:id/cancel
+ * @access Protégé - Agents uniquement
+ */
 router.post('/:id/cancel', protect, ticketController.cancelTicket);
 
 module.exports = router;

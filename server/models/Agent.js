@@ -1,8 +1,20 @@
+/**
+ * Modèle Agent - Représente un agent de service
+ * Gère les informations des agents, leurs services et permissions
+ * @module AgentModel
+ */
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+/**
+ * Schéma Mongoose pour les agents
+ * Définit la structure des données d'un agent dans la base de données
+ */
 const agentSchema = new mongoose.Schema({
-  // Agent credentials
+  /**
+   * Identifiants de l'agent
+   */
+  // Nom d'utilisateur pour la connexion
   username: {
     type: String,
     required: [true, 'Username is required'],
@@ -11,6 +23,7 @@ const agentSchema = new mongoose.Schema({
     minlength: [3, 'Username must be at least 3 characters']
   },
   
+  // Mot de passe (hashé) - non sélectionné par défaut pour sécurité
   password: {
     type: String,
     required: [true, 'Password is required'],
@@ -18,19 +31,24 @@ const agentSchema = new mongoose.Schema({
     select: false
   },
   
-  // Agent information
+  /**
+   * Informations personnelles de l'agent
+   */
+  // Prénom
   firstName: {
     type: String,
     required: [true, 'First name is required'],
     trim: true
   },
   
+  // Nom de famille
   lastName: {
     type: String,
     required: [true, 'Last name is required'],
     trim: true
   },
   
+  // Email professionnel
   email: {
     type: String,
     required: [true, 'Email is required'],
@@ -40,23 +58,28 @@ const agentSchema = new mongoose.Schema({
     match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
   },
   
-  // Role
+  /**
+   * Rôle et permissions de l'agent
+   */
   role: {
     type: String,
     enum: ['agent', 'admin', 'supervisor'],
     default: 'agent'
   },
   
-  // Counter/desk assignment
+  /**
+   * Numéro de guichet/comptoir assigné
+   */
   counterNumber: {
     type: Number,
     default: null
   },
   
-  // Services this agent can handle
-  // AMÉLIORATION: Chaque agent a maintenant une liste de services spécifiques
-  // Cela permet de filtrer les tickets par service et d'assurer qu'un agent
-  // ne peut prendre que les tickets correspondant à ses services
+  /**
+   * Services que cet agent peut traiter
+   * AMÉLIORATION: Permet le filtrage des tickets par service
+   * Garantit qu'un agent ne voit que les tickets de ses services
+   */
   services: {
     type: [{
       type: String,

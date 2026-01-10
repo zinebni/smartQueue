@@ -56,7 +56,7 @@ import { SocketService } from './services/socket.service';
       </main>
       
       <footer class="footer">
-        <p>© 2024 Smart Queue - Gestion Intelligente des Files d'Attente</p>
+        <p>© 2026 Smart Queue - Gestion Intelligente des Files d'Attente</p>
       </footer>
     </div>
   `,

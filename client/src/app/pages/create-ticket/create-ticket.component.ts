@@ -1,3 +1,8 @@
+/**
+ * Composant de création de ticket
+ * Permet aux clients de générer un nouveau ticket dans la file d'attente
+ * @author Smart Queue Team
+ */
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
