@@ -10,53 +10,55 @@ import { SocketService } from './services/socket.service';
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   template: `
     <div class="app-container">
-      <header class="header">
-        <div class="header-content">
-          <a routerLink="/" class="logo">
-            <span class="logo-icon">🎫</span>
-            <span class="logo-text">Smart Queue</span>
-          </a>
-          
-          <nav class="nav">
-            <a routerLink="/create-ticket" routerLinkActive="active">
-              <span class="material-icons">add_circle</span>
-              Nouveau Ticket
-            </a>
-            <a routerLink="/ticket-status" routerLinkActive="active">
-              <span class="material-icons">search</span>
-              Suivre Ticket
+      @if (!isDisplayPage()) {
+        <header class="header">
+          <div class="header-content">
+            <a routerLink="/" class="logo">
+              <span class="logo-icon">🎫</span>
+              <span class="logo-text">Smart Queue</span>
             </a>
             
-            @if (authService.isLoggedIn()) {
-              <a routerLink="/agent" routerLinkActive="active">
-                <span class="material-icons">support_agent</span>
-                Console Agent
+            <nav class="nav">
+              <a routerLink="/create-ticket" routerLinkActive="active">
+                <span class="material-icons">add_circle</span>
+                Nouveau Ticket
               </a>
-              @if (authService.isAdmin()) {
-                <a routerLink="/admin" routerLinkActive="active">
-                  <span class="material-icons">dashboard</span>
-                  Admin
+              <a routerLink="/ticket-status" routerLinkActive="active">
+                <span class="material-icons">search</span>
+                Suivre Ticket
+              </a>
+              
+              @if (authService.isLoggedIn()) {
+                <a routerLink="/agent" routerLinkActive="active">
+                  <span class="material-icons">support_agent</span>
+                  Console Agent
+                </a>
+                @if (authService.isAdmin()) {
+                  <a routerLink="/admin" routerLinkActive="active">
+                    <span class="material-icons">dashboard</span>
+                    Admin
+                  </a>
+                }
+                <button class="btn-logout" (click)="logout()">
+                  <span class="material-icons">logout</span>
+                </button>
+              } @else {
+                <a routerLink="/login" routerLinkActive="active" class="btn-login">
+                  <span class="material-icons">login</span>
+                  Connexion
                 </a>
               }
-              <button class="btn-logout" (click)="logout()">
-                <span class="material-icons">logout</span>
-              </button>
-            } @else {
-              <a routerLink="/login" routerLinkActive="active" class="btn-login">
-                <span class="material-icons">login</span>
-                Connexion
-              </a>
-            }
-          </nav>
-        </div>
-      </header>
+            </nav>
+          </div>
+        </header>
+      }
       
       <main class="main-content">
         <router-outlet></router-outlet>
       </main>
       
       <footer class="footer">
-        <p>© 2026 Smart Queue - Gestion Intelligente des Files d'Attente</p>
+        <p>© 2024 Smart Queue - Gestion Intelligente des Files d'Attente</p>
       </footer>
     </div>
   `,
@@ -163,6 +165,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.socketService.disconnect();
+  }
+
+  isDisplayPage(): boolean {
+    return this.router.url.startsWith('/display');
   }
 
   logout() {

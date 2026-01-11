@@ -32,12 +32,7 @@ export class StatsService {
     return this.http.get<ApiResponse<QueueStats>>(this.apiUrl);
   }
 
-  /**
-   * Récupère l'état actuel de la file d'attente
-   * Inclut les tickets en cours et les prochains en attente
-   * @returns Observable contenant le statut de la file
-   * @access Public - Pour les affichages publics
-   */
+  // Get queue status (public - for display)
   getQueueStatus(): Observable<ApiResponse<QueueStatus>> {
     return this.http.get<ApiResponse<QueueStatus>>(`${this.apiUrl}/queue`);
   }
