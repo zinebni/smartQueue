@@ -140,14 +140,28 @@ exports.getAgentStats = async (req, res) => {
 // Get queue status (for display)
 exports.getQueueStatus = async (req, res) => {
   try {
+    const { service } = req.query;
+    
+    // Build filter object
+    const filter = {};
+    if (service) {
+      filter.serviceType = service;
+    }
+    
     // Get current serving tickets
-    const servingTickets = await Ticket.find({ status: { $in: ['called', 'serving'] } })
+    const servingTickets = await Ticket.find({ 
+      ...filter,
+      status: { $in: ['called', 'serving'] } 
+    })
       .populate('servedBy', 'firstName lastName counterNumber')
       .sort({ calledAt: -1 })
       .limit(10);
 
     // Get next waiting tickets
-    const waitingTickets = await Ticket.find({ status: 'waiting' })
+    const waitingTickets = await Ticket.find({ 
+      ...filter,
+      status: 'waiting' 
+    })
       .sort({ priority: -1, createdAt: 1 })
       .limit(10);
 

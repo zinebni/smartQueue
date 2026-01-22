@@ -1,5 +1,16 @@
+/**
+ * Modèle de données Ticket
+ * Représente un ticket dans la file d'attente
+ * @module TicketModel
+ * @author Smart Queue Team
+ * @version 1.0.0
+ */
 const mongoose = require('mongoose');
 
+/**
+ * Schéma du ticket
+ * @typedef {Object} TicketSchema
+ */
 const ticketSchema = new mongoose.Schema({
   // Ticket number (auto-generated, e.g., A001, B002)
   ticketNumber: {

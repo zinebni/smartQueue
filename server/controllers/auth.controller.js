@@ -1,8 +1,16 @@
+/**
+ * Contrôleur d'authentification
+ * Gère la connexion, déconnexion et vérification des agents
+ */
 const jwt = require('jsonwebtoken');
 const Agent = require('../models/Agent');
 const config = require('../config');
 
-// Generate JWT token
+/**
+ * Génère un token JWT pour un agent
+ * @param {Object} agent - L'agent pour lequel générer le token
+ * @returns {string} Token JWT signé
+ */
 const generateToken = (agent) => {
   return jwt.sign(
     { 
@@ -15,12 +23,18 @@ const generateToken = (agent) => {
   );
 };
 
-// Login
+/**
+ * Authentification d'un agent
+ * @route POST /api/auth/login
+ * @param {string} username - Nom d'utilisateur
+ * @param {string} password - Mot de passe
+ * @returns {Object} Token JWT et informations de l'agent
+ */
 exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validation
+    // Validation des champs requis
     if (!username || !password) {
       return res.status(400).json({
         success: false,
@@ -28,9 +42,10 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Find agent
+    // Recherche de l'agent dans la base de données
     const agent = await Agent.findOne({ username }).select('+password');
 
+    // Vérification de l'existence de l'agent
     if (!agent) {
       return res.status(401).json({
         success: false,
@@ -38,7 +53,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Check if agent is active
+    // Vérification que le compte est actif
     if (!agent.isActive) {
       return res.status(401).json({
         success: false,
@@ -46,7 +61,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Check password
+    // Vérification du mot de passe
     const isMatch = await agent.comparePassword(password);
 
     if (!isMatch) {

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { QueueStatus } from '../../models/stats.model';
 import { SocketService } from '../../services/socket.service';
@@ -12,7 +13,14 @@ import { StatsService } from '../../services/stats.service';
   template: `
     <div class="queue-display-page">
       <header class="display-header">
-        <h1>🎫 Smart Queue</h1>
+        <div class="logo">
+          <span class="logo-icon">🎫</span>
+          <span class="logo-text">Smart Queue</span>
+        </div>
+        <div class="service-badge">
+          <span class="material-icons">{{ getServiceIcon() }}</span>
+          {{ getServiceName() }}
+        </div>
         <div class="time">{{ currentTime | date:'HH:mm:ss' }}</div>
       </header>
       
@@ -76,6 +84,56 @@ import { StatsService } from '../../services/stats.service';
       color: white;
       display: flex;
       flex-direction: column;
+    }
+    
+    .display-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background: linear-gradient(135deg, #2c5282 0%, #1e3a5f 100%);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+    }
+    
+    .logo-icon {
+      font-size: 2rem;
+    }
+    
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .service-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #48bb78;
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 12px;
+      font-size: 1.25rem;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .service-badge .material-icons {
+      font-size: 1.75rem;
+    }
+    
+    .time { 
+      font-size: 1.75rem; 
+      font-family: monospace; 
+      font-weight: bold;
+      flex: 1;
+      text-align: right;
     }
     
     .display-header {
@@ -207,14 +265,35 @@ import { StatsService } from '../../services/stats.service';
 export class QueueDisplayComponent implements OnInit, OnDestroy {
   queueStatus: QueueStatus | null = null;
   currentTime = new Date();
+  service: string = '';
   private subscriptions: Subscription[] = [];
+
+  private serviceNames: Record<string, string> = {
+    'account': 'Gestion de Compte',
+    'loan': 'Gestion de Prêt',
+    'payment': 'Gestion de Paiement',
+    'general': 'Service Général',
+    'registration': 'Inscription',
+    'consultation': 'Consultation'
+  };
+
+  private serviceIcons: Record<string, string> = {
+    'account': 'account_balance',
+    'loan': 'payments',
+    'payment': 'payment',
+    'general': 'help',
+    'registration': 'how_to_reg',
+    'consultation': 'contact_support'
+  };
 
   constructor(
     private statsService: StatsService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.service = this.route.snapshot.paramMap.get('service') || '';
     this.loadQueueStatus();
     
     // Update time every second
@@ -241,7 +320,7 @@ export class QueueDisplayComponent implements OnInit, OnDestroy {
   }
 
   loadQueueStatus() {
-    this.statsService.getQueueStatus().subscribe({
+    this.statsService.getQueueStatus(this.service).subscribe({
       next: (response) => {
         if (response.success && response.data) {
           this.queueStatus = response.data;
@@ -254,6 +333,14 @@ export class QueueDisplayComponent implements OnInit, OnDestroy {
     if (!calledAt) return false;
     const diff = Date.now() - new Date(calledAt).getTime();
     return diff < 30000; // Less than 30 seconds ago
+  }
+
+  getServiceName(): string {
+    return this.serviceNames[this.service] || 'Service';
+  }
+
+  getServiceIcon(): string {
+    return this.serviceIcons[this.service] || 'help';
   }
 }
 

@@ -1,3 +1,8 @@
+/**
+ * Module de gestion des tickets
+ * Contient toutes les opérations CRUD et la logique métier des tickets
+ * @module TicketController
+ */
 const Ticket = require('../models/Ticket');
 const socketService = require('../services/socket.service');
 
