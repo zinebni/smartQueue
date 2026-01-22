@@ -3,8 +3,8 @@
  * Gère la récupération des données statistiques de la file d'attente
  * @author Smart Queue Team
  */
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { QueueStats, QueueStatus } from '../models/stats.model';
@@ -33,7 +33,10 @@ export class StatsService {
   }
 
   // Get queue status (public - for display)
-  getQueueStatus(): Observable<ApiResponse<QueueStatus>> {
+  getQueueStatus(service?: string): Observable<ApiResponse<QueueStatus>> {
+    if (service) {
+      return this.http.get<ApiResponse<QueueStatus>>(`${this.apiUrl}/queue/${service}`);
+    }
     return this.http.get<ApiResponse<QueueStatus>>(`${this.apiUrl}/queue`);
   }
 

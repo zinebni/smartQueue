@@ -255,14 +255,24 @@ export class HomeComponent implements OnInit, OnDestroy {
    * Charge l'état actuel de la file d'attente
    * Récupère les tickets en cours de service et les prochains en attente
    */
+  // loadQueueStatus() {
+  //   this.statsService.getQueueStatus().subscribe({
+  //     next: (response) => {
+  //       if (response.success && response.data) {
+  //         this.queueStatus = response.data;
+  //       }
+  //     }
+  //   });
+  // }
   loadQueueStatus() {
-    this.statsService.getQueueStatus().subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.queueStatus = response.data;
-        }
+  this.statsService.getQueueStatus().subscribe({
+    next: (response) => {
+      if (response.success && response.data) {
+        this.queueStatus = response.data;
       }
-    });
-  }
+    }
+  });
+}
+
 }
 
